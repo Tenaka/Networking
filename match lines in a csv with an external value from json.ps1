@@ -39,14 +39,14 @@ foreach($lnSubnet in $gtSubnet)
     {
         if ($lnSubnet.mask -cmatch $PDC_Subnet)
             {
-                $dcSubnet = $lnSubnet.cidr
+                $prefix = $lnSubnet.cidr
             }
     }
 #
 New-NetIPAddress -InterfaceAlias $gtNetAdpap.Name `
                  -IPAddress $PDC_IP                       `
                  -AddressFamily IPv4                      `
-                 -PrefixLength $dcSubnet                         `
+                 -PrefixLength $prefix                    `
                  -DefaultGateway $PDC_Route
         
 #Set DNS Server                 
