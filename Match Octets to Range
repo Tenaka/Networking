@@ -1,0 +1,36 @@
+# Define the IP range you want to match
+
+<#
+    192.1.3.1 - 192.1.3.32
+    192.1.3.33 - 192.1.3.62
+    192.1.3.63 - 192.1.3.94
+    192.1.3.95 - 192.1.3.127
+#>
+
+$gNetAdp = Get-NetAdapter #| where {$_.Status -eq "up"}
+
+$intAlias = $gNetAdp.InterfaceAlias
+
+$gNetIPC = Get-NetIPConfiguration -InterfaceAlias $gNetAdp.Name
+$IPAddress = $gNetIPC.IPv4Address.ipaddress 
+$Router4 = $gNetIPC.IPv4DefaultGateway.nexthop 
+
+$startOctetUsr = 33
+$endOctetUsr = 62
+
+$startOctetSrv = 63
+$endOctetSrv = 94
+
+$octets = $IPAddress.Split('.')
+$thirdOctet = [int]$octets[3]
+
+
+ if ($thirdOctet -ge $startOctetUsr -and $thirdOctet -le $endOctetUsr) 
+    {
+        Write-Host "$IPAddress matches the range ($startOctet - $endOctet)"
+    }
+elseif ($thirdOctet -ge $startOctetSrv -and $thirdOctet -le $endOctetSrv) 
+    {
+        Write-Host "$IPAddress matches the range ($startOctetSrv - $endOctetSrv)"
+    }
+
